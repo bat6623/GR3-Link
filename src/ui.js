@@ -25,15 +25,18 @@ export class UIManager {
         const startBtn = document.getElementById('btn-start-app');
         if (startBtn) {
             console.log('Startup button found, attaching listener');
-            startBtn.addEventListener('click', (e) => {
+            const startHandler = (e) => {
                 e.preventDefault();
-                console.log('Connect clicked, starting app...');
+                console.log('Connect interacting, starting app...');
                 document.body.classList.add('app-started');
                 setTimeout(() => {
                     const overlay = document.getElementById('startup-overlay');
                     if (overlay) overlay.style.display = 'none';
                 }, 1000);
-            });
+            };
+
+            startBtn.addEventListener('click', startHandler);
+            startBtn.addEventListener('touchstart', startHandler, { passive: false });
         } else {
             console.error('Startup button not found!');
         }
