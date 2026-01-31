@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    base: '/GR3-Link/',
     server: {
         host: '0.0.0.0', // Allow external access for testing on phone
         proxy: {
