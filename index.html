@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1a1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>GR3 Link</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="noise-overlay"></div>
+
+  <div id="startup-overlay">
+    <div class="shutter-blade shutter-top"></div>
+    <div class="startup-content">
+      <div class="startup-logo">GR3 <span>Link</span></div>
+      <button id="btn-start-app" class="btn-start">Connect</button>
+    </div>
+    <div class="shutter-blade shutter-bottom"></div>
+  </div>
+
+  <div id="app">
+    <header>
+      <div class="logo">GR3 <span>Link</span></div>
+      <div id="connection-status" class="status-indicator disconnected">Wait...</div>
+    </header>
+
+    <main id="main-content">
+      <!-- Views will be injected here -->
+      <div id="view-home" class="view">
+        <h2>Welcome to GR3 Link</h2>
+        <p class="description">Connect to your Ricoh GR III to manage photos and recipes.</p>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-target="photos">
+        <span class="nav-icon"
+          style="mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\' stroke=\'currentColor\' stroke-width=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\' fill=\'currentColor\'/><path d=\'M21 15L16 10L5 21\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linejoin=\'round\'/></svg>')"></span>
+        <span>Photos</span>
+      </button>
+      <button class="nav-item" data-target="recipes">
+        <span class="nav-icon"
+          style="mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M3 5H21V19H3V5Z\' stroke=\'currentColor\' stroke-width=\'2\'/><path d=\'M7 9H17\' stroke=\'currentColor\' stroke-width=\'2\'/><path d=\'M7 13H17\' stroke=\'currentColor\' stroke-width=\'2\'/></svg>')"></span>
+        <span>Recipes</span>
+      </button>
+      <button class="nav-item" data-target="settings">
+        <span class="nav-icon"
+          style="mask-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 24 24\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z\' stroke=\'currentColor\' stroke-width=\'2\'/><path d=\'M19.4 15A1.65 1.65 0 0020 12a1.65 1.65 0 00-.6-3l2.1-2.4a.5.5 0 00-.1-.6l-2.4-1.3a.5.5 0 00-.6.1l-2.4 1.5a1.65 1.65 0 00-3-1.8L12 2a.5.5 0 00-.5.5v2.8a1.65 1.65 0 00-3 1.2L6.1 4.5a.5.5 0 00-.6-.1L3.1 5.7a.5.5 0 00-.1.6L5.1 8.7a1.65 1.65 0 00-.6 3l-2.1 2.4a.5.5 0 00.1.6l2.4 1.3a.5.5 0 00.6-.1l2.4-1.5a1.65 1.65 0 003 1.8L12 22a.5.5 0 00.5-.5v-2.8a1.65 1.65 0 003-1.2l2.4 2a.5.5 0 00.6.1l2.4-1.3a.5.5 0 00.1-.6L19.4 15z\' stroke=\'currentColor\' stroke-width=\'2\'/></svg>')"></span>
+        <span>Settings</span>
+      </button>
+    </nav>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
