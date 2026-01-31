@@ -18,7 +18,30 @@ export class UIManager {
 
         this._initViews();
         this._bindEvents();
+        this._initToast();
         this._handleStartup();
+    }
+
+    _initToast() {
+        this.toastContainer = document.createElement('div');
+        this.toastContainer.className = 'toast-container';
+        document.body.appendChild(this.toastContainer);
+    }
+
+    showToast(message, duration = 2000) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        this.toastContainer.appendChild(toast);
+
+        // Trigger reflow
+        toast.offsetHeight;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
     }
 
     _handleStartup() {
@@ -121,21 +144,13 @@ export class UIManager {
 
         const grid = document.createElement('div');
         grid.className = 'photo-grid';
-        // Style for grid embedded here or in CSS (better in CSS)
-        grid.style.display = 'grid';
-        grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(100px, 1fr))';
-        grid.style.gap = 'var(--spacing-xs)';
+        // Grid styles now in CSS
 
         photos.forEach(photo => {
             const item = document.createElement('div');
             item.className = 'photo-item';
-            item.style.aspectRatio = '1/1';
-            item.style.backgroundColor = '#333';
+            // Background image still needs inline style as it is dynamic
             item.style.backgroundImage = `url('${photo.thumbnail}')`;
-            item.style.backgroundSize = 'cover';
-            item.style.backgroundPosition = 'center';
-            item.style.borderRadius = 'var(--border-radius-sm)';
-            item.style.cursor = 'pointer';
 
             item.onclick = () => this.openLightbox(photo);
             grid.appendChild(item);
@@ -243,26 +258,46 @@ export class UIManager {
 
         container.innerHTML = `
       <h3>${isEdit ? 'Edit Recipe' : 'New Recipe'}</h3>
-      <form id="recipe-form" style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
-        <input type="text" name="name" placeholder="Recipe Name" value="${recipe ? recipe.name : ''}" required style="padding:10px; background:#333; border:1px solid #444; color:#fff;">
+      <form id="recipe-form" style="display:flex; flex-direction:column; gap:16px; margin-top:24px;">
+        <div class="form-group">
+            <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Name</label>
+            <input type="text" name="name" placeholder="E.g. Urban High Contrast" value="${recipe ? recipe.name : ''}" required>
+        </div>
         
-        <select name="baseEffect" style="padding:10px; background:#333; border:1px solid #444; color:#fff;">
-          <option value="Positive Film" ${recipe?.baseEffect === 'Positive Film' ? 'selected' : ''}>Positive Film</option>
-          <option value="Negative Film" ${recipe?.baseEffect === 'Negative Film' ? 'selected' : ''}>Negative Film</option>
-          <option value="Hi-Contrast B&W" ${recipe?.baseEffect === 'Hi-Contrast B&W' ? 'selected' : ''}>Hi-Contrast B&W</option>
-          <option value="Soft Monotone" ${recipe?.baseEffect === 'Soft Monotone' ? 'selected' : ''}>Soft Monotone</option>
-          <option value="Retro" ${recipe?.baseEffect === 'Retro' ? 'selected' : ''}>Retro</option>
-          <option value="Bleach Bypass" ${recipe?.baseEffect === 'Bleach Bypass' ? 'selected' : ''}>Bleach Bypass</option>
-        </select>
+        <div class="form-group">
+            <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Base Effect</label>
+            <select name="baseEffect">
+              <option value="Positive Film" ${recipe?.baseEffect === 'Positive Film' ? 'selected' : ''}>Positive Film</option>
+              <option value="Negative Film" ${recipe?.baseEffect === 'Negative Film' ? 'selected' : ''}>Negative Film</option>
+              <option value="Hi-Contrast B&W" ${recipe?.baseEffect === 'Hi-Contrast B&W' ? 'selected' : ''}>Hi-Contrast B&W</option>
+              <option value="Soft Monotone" ${recipe?.baseEffect === 'Soft Monotone' ? 'selected' : ''}>Soft Monotone</option>
+              <option value="Retro" ${recipe?.baseEffect === 'Retro' ? 'selected' : ''}>Retro</option>
+              <option value="Bleach Bypass" ${recipe?.baseEffect === 'Bleach Bypass' ? 'selected' : ''}>Bleach Bypass</option>
+            </select>
+        </div>
         
-        <label>Saturation <input type="number" name="saturation" value="${recipe?.params?.saturation || 0}" min="-4" max="4"></label>
-        <label>Hue <input type="number" name="hue" value="${recipe?.params?.hue || 0}" min="-4" max="4"></label>
-        <label>High/Low Key <input type="number" name="highKey" value="${recipe?.params?.highKey || 0}" min="-4" max="4"></label>
-        <label>Contrast <input type="number" name="contrast" value="${recipe?.params?.contrast || 0}" min="-4" max="4"></label>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Saturation</label>
+                <input type="number" name="saturation" value="${recipe?.params?.saturation || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Hue</label>
+                <input type="number" name="hue" value="${recipe?.params?.hue || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">High/Low Key</label>
+                <input type="number" name="highKey" value="${recipe?.params?.highKey || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Contrast</label>
+                <input type="number" name="contrast" value="${recipe?.params?.contrast || 0}" min="-4" max="4">
+            </div>
+        </div>
         
         <div style="display:flex; gap:10px; margin-top:20px;">
-          <button type="button" class="btn" id="btn-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn" id="btn-cancel" style="flex:1;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1;">Save Recipe</button>
         </div>
       </form>
     `;
@@ -284,8 +319,10 @@ export class UIManager {
 
             if (isEdit) {
                 this.store.update(recipe.id, data);
+                this.showToast('Recipe updated');
             } else {
                 this.store.add(data);
+                this.showToast('New recipe added');
             }
             this.renderRecipes();
         };

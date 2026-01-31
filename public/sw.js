@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gr3-link-v2';
+const CACHE_NAME = 'gr3-link-v3';
 const ASSETS = [
     './',
     './index.html',
