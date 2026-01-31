@@ -24,13 +24,18 @@ export class UIManager {
     _handleStartup() {
         const startBtn = document.getElementById('btn-start-app');
         if (startBtn) {
-            startBtn.addEventListener('click', () => {
+            console.log('Startup button found, attaching listener');
+            startBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Connect clicked, starting app...');
                 document.body.classList.add('app-started');
                 setTimeout(() => {
                     const overlay = document.getElementById('startup-overlay');
                     if (overlay) overlay.style.display = 'none';
                 }, 1000);
             });
+        } else {
+            console.error('Startup button not found!');
         }
     }
 
