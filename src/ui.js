@@ -74,8 +74,9 @@ export class UIManager {
                 }, 800);
             };
 
-            // Use pointerup for better compatibility across devices
-            startBtn.addEventListener('pointerup', startHandler);
+            // Use standard 'click' for maximum compatibility on iOS PWA
+            // 'pointerup' can be cancelled if finger moves slightly (scroll)
+            startBtn.addEventListener('click', startHandler);
         } else {
             console.error('Startup button not found!');
         }
