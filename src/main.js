@@ -1,10 +1,15 @@
 import { GRCamera } from './camera.js';
 import { RecipeStore } from './storage.js';
 import { UIManager } from './ui.js';
+import { initializeTemplates } from './templates.js';
 
 const initApp = async () => {
   const camera = new GRCamera();
   const store = new RecipeStore();
+
+  // Initialize default templates on first run
+  initializeTemplates(store);
+
   const ui = new UIManager(camera, store);
 
   console.log('App Initializing...');
