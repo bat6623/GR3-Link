@@ -9,7 +9,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>GR3 Link</title>
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="./vite.svg" type="image/svg+xml" />
+  <!-- Manifest link handled by PWA plugin usually, but explicit relative doesn't hurt -->
+  <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 
@@ -20,7 +22,8 @@
     <div class="shutter-blade shutter-top"></div>
     <div class="startup-content">
       <div class="startup-logo">GR3 <span>Link</span></div>
-      <div style="color: #666; font-size: 0.8rem; margin-bottom: 2rem; font-family: var(--font-mono);">v1.1.0</div>
+      <div style="color: #666; font-size: 0.8rem; margin-bottom: 2rem; font-family: var(--font-mono);">v1.2.0 (PWA)
+      </div>
       <button id="btn-start-app" class="btn-start">Connect</button>
     </div>
     <div class="shutter-blade shutter-bottom"></div>
@@ -58,7 +61,7 @@
       </button>
     </nav>
   </div>
-  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="./src/main.js"></script>
 </body>
 
 </html>

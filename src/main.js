@@ -1,6 +1,9 @@
 import { GRCamera } from './camera.js';
 import { RecipeStore } from './storage.js';
 import { UIManager } from './ui.js';
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
 
 const initApp = async () => {
   const camera = new GRCamera();
@@ -56,12 +59,25 @@ const initApp = async () => {
     });
   }
 
-  // Register Service Worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW Registered'))
-      .catch(e => console.error('SW Fail', e));
-  }
+  // Register Service Worker via Vite Plugin PWA
+  // Note: with 'registerType: autoUpdate', the plugin injects registration code script in index.html
+  // But we can explicit it if we want. For now, let's rely on the plugin.
+  // Actually, we need to import registerSW if we want manual control, 
+  // but let's trust the 'autoUpdate' injection usually works, 
+  // OR we add <script> in index.html.
+  // Wait, standard Vite PWA with 'autoUpdate' creates a registerSW.js or we import it.
+
+  // To be safe:
+  /*
+  import { registerSW } from 'virtual:pwa-register'
+  registerSW({ immediate: true })
+  */
+  // But since we are Vanilla JS, we can't easily import 'virtual:' modules nicely without bundler support being active in src.
+  // Yes we can, Vite handles it.
+
+  // So:
+  // 1. Remove old registration code.
+
 };
 
 initApp();
