@@ -12,7 +12,7 @@ export class RecipeStore {
         return data ? JSON.parse(data) : [];
     }
 
-    _save(recipes) {
+    _save(recipes = this.recipes) {
         localStorage.setItem(this.storageKey, JSON.stringify(recipes));
     }
 
