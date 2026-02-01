@@ -1,19 +1,15 @@
 export class RecipeStore {
     constructor() {
-        this.STORAGE_KEY = 'gr3_recipes';
-        this.recipes = this._load();
-        if (this.recipes.length === 0) {
-            this._seed();
-        }
+        this.storageKey = 'gr3-recipes';
     }
 
     _load() {
-        const data = localStorage.getItem(this.STORAGE_KEY);
+        const data = localStorage.getItem(this.storageKey);
         return data ? JSON.parse(data) : [];
     }
 
-    _save() {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.recipes));
+    _save(recipes) {
+        localStorage.setItem(this.storageKey, JSON.stringify(recipes));
     }
 
     _seed() {
@@ -26,13 +22,25 @@ export class RecipeStore {
                 params: {
                     saturation: 0,
                     hue: 0,
-                    highKey: 0,
+                    highLowKey: 0, // Changed from highKey
                     contrast: 1,
                     contrastHighlight: 0,
                     contrastShadow: -1,
                     sharpness: 1,
                     shading: 0,
-                    clarity: 0
+                    clarity: 0,
+                    toning: 'Off',
+                    filterEffect: 0,
+                    grainEffect: 0,
+                    highlightCorrection: false,
+                    shadowCorrection: 'Off',
+                    peripheralIlluminationCorrection: false,
+                    highISONoiseReduction: false,
+                    whiteBalance: 'Auto',
+                    wbCompensationA: 0,
+                    wbCompensationM: 0,
+                    isoMax: 6400,
+                    exposureCompensation: '+1/3'
                 },
                 note: 'Classic highly saturated look.'
             },
