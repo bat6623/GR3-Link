@@ -1,9 +1,6 @@
 import { GRCamera } from './camera.js';
 import { RecipeStore } from './storage.js';
 import { UIManager } from './ui.js';
-import { registerSW } from 'virtual:pwa-register';
-
-registerSW({ immediate: true });
 
 const initApp = async () => {
   const camera = new GRCamera();
