@@ -1,6 +1,10 @@
 export class RecipeStore {
     constructor() {
         this.storageKey = 'gr3-recipes';
+        this.recipes = this._load(); // 正確載入初始資料
+        if (this.recipes.length === 0) {
+            this._seed();
+        }
     }
 
     _load() {
