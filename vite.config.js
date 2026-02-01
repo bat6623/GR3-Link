@@ -10,7 +10,21 @@ export default defineConfig({
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
-                skipWaiting: true
+                skipWaiting: true,
+                // Add runtime caching for images to avoid 404s
+                runtimeCaching: [
+                    {
+                        urlPattern: ({ request }) => request.destination === 'image',
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'images-cache',
+                            expiration: {
+                                maxEntries: 10,
+                                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+                            },
+                        },
+                    },
+                ]
             },
             manifest: {
                 name: 'GR3 Link',
