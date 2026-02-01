@@ -49,8 +49,8 @@ export class UIManager {
         if (startBtn) {
             console.log('Startup button found, attaching listener');
             const startHandler = (e) => {
-                e.preventDefault();
-                console.log('Connect interacting, starting app...');
+                // e.preventDefault(); // Pointer events don't need preventDefault usually, but safe to keep if handling specialized stuff
+                console.log('Connect interacting (pointer), starting app...');
                 document.body.classList.add('app-started');
                 setTimeout(() => {
                     const overlay = document.getElementById('startup-overlay');
@@ -58,8 +58,8 @@ export class UIManager {
                 }, 1000);
             };
 
-            startBtn.addEventListener('click', startHandler);
-            startBtn.addEventListener('touchstart', startHandler, { passive: false });
+            // Use pointerup for better compatibility across devices
+            startBtn.addEventListener('pointerup', startHandler);
         } else {
             console.error('Startup button not found!');
         }
