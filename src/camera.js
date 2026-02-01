@@ -50,6 +50,7 @@ export class GRCamera {
       return true;
     }
   }
+
   async getPhotos() {
     if (this.isMock) {
       return this._getMockPhotos();
@@ -80,18 +81,15 @@ export class GRCamera {
     }
   }
 
-  _getMockPhotos() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve([
-          { name: 'R0012345.JPG', url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-10-27' },
-          { name: 'R0012346.JPG', url: 'https://images.unsplash.com/photo-1495572099496-6e27a7c56a31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1495572099496-6e27a7c56a31?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-10-28' },
-          { name: 'R0012347.DNG', url: 'https://images.unsplash.com/photo-1549520442-e14f6b0f24e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1549520442-e14f6b0f24e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-10-29' },
-          { name: 'R0012348.JPG', url: 'https://images.unsplash.com/photo-1623861278144-84d43675c94d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1623861278144-84d43675c94d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-10-30' },
-          { name: 'R0012349.JPG', url: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-10-31' },
-          { name: 'R0012350.JPG', url: 'https://images.unsplash.com/photo-1517524959063-e838706c6418?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80', thumbnail: 'https://images.unsplash.com/photo-1517524959063-e838706c6418?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', date: '2023-11-01' },
-        ]);
-      }, 500);
-    });
+  async _getMockPhotos() {
+    // Return dummy data for UI testing
+    const mockData = Array.from({ length: 12 }).map((_, i) => ({
+      name: `R00000${i + 1}.JPG`,
+      thumbnail: `https://picsum.photos/seed/${i + 1}/300/300`, // Reliable placeholder
+      large: `https://picsum.photos/seed/${i + 1}/1920/1280`,
+      date: '2023-10-27',
+      params: { f: 2.8, iso: 100, s: '1/125' }
+    }));
+    return mockData;
   }
 }
