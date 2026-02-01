@@ -271,41 +271,196 @@ export class UIManager {
 
         container.innerHTML = `
       <h3>${isEdit ? 'Edit Recipe' : 'New Recipe'}</h3>
-      <form id="recipe-form" style="display:flex; flex-direction:column; gap:16px; margin-top:24px;">
-        <div class="form-group">
-            <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Name</label>
-            <input type="text" name="name" placeholder="E.g. Urban High Contrast" value="${recipe ? recipe.name : ''}" required>
-        </div>
-        
-        <div class="form-group">
-            <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Base Effect</label>
+      
+      <!-- Tab Navigation -->
+      <div class="form-tabs" style="display: flex; gap: 8px; margin: 20px 0; border-bottom: 1px solid var(--color-border);">
+        <button class="form-tab active" data-tab="basic">基礎</button>
+        <button class="form-tab" data-tab="advanced">進階</button>
+        <button class="form-tab" data-tab="correction">校正</button>
+        <button class="form-tab" data-tab="exposure">曝光</button>
+      </div>
+      
+      <form id="recipe-form" style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Basic Tab -->
+        <div class="form-tab-content" data-tab="basic">
+          <div class="form-group">
+            <label>名稱</label>
+            <input type="text" name="name" placeholder="例如：街拍高對比" value="${recipe ? recipe.name : ''}" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Base Effect</label>
             <select name="baseEffect">
               <option value="Positive Film" ${recipe?.baseEffect === 'Positive Film' ? 'selected' : ''}>Positive Film</option>
               <option value="Negative Film" ${recipe?.baseEffect === 'Negative Film' ? 'selected' : ''}>Negative Film</option>
               <option value="Hi-Contrast B&W" ${recipe?.baseEffect === 'Hi-Contrast B&W' ? 'selected' : ''}>Hi-Contrast B&W</option>
+              <option value="BW Monotone" ${recipe?.baseEffect === 'BW Monotone' ? 'selected' : ''}>BW Monotone</option>
               <option value="Soft Monotone" ${recipe?.baseEffect === 'Soft Monotone' ? 'selected' : ''}>Soft Monotone</option>
               <option value="Retro" ${recipe?.baseEffect === 'Retro' ? 'selected' : ''}>Retro</option>
               <option value="Bleach Bypass" ${recipe?.baseEffect === 'Bleach Bypass' ? 'selected' : ''}>Bleach Bypass</option>
             </select>
+          </div>
+          
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label>Saturation (-4 ~ +4)</label>
+              <input type="number" name="saturation" value="${recipe?.params?.saturation || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+              <label>Hue (-4 ~ +4)</label>
+              <input type="number" name="hue" value="${recipe?.params?.hue || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+              <label>High/Low Key (-4 ~ +4)</label>
+              <input type="number" name="highLowKey" value="${recipe?.params?.highLowKey || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+              <label>Contrast (-4 ~ +4)</label>
+              <input type="number" name="contrast" value="${recipe?.params?.contrast || 0}" min="-4" max="4">
+            </div>
+          </div>
         </div>
         
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+        <!-- Advanced Tab -->
+        <div class="form-tab-content hidden" data-tab="advanced">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
             <div class="form-group">
-                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Saturation</label>
-                <input type="number" name="saturation" value="${recipe?.params?.saturation || 0}" min="-4" max="4">
+              <label>Contrast (Highlight) (-4 ~ +4)</label>
+              <input type="number" name="contrastHighlight" value="${recipe?.params?.contrastHighlight || 0}" min="-4" max="4">
             </div>
             <div class="form-group">
-                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Hue</label>
-                <input type="number" name="hue" value="${recipe?.params?.hue || 0}" min="-4" max="4">
+              <label>Contrast (Shadow) (-4 ~ +4)</label>
+              <input type="number" name="contrastShadow" value="${recipe?.params?.contrastShadow || 0}" min="-4" max="4">
             </div>
             <div class="form-group">
-                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">High/Low Key</label>
-                <input type="number" name="highKey" value="${recipe?.params?.highKey || 0}" min="-4" max="4">
+              <label>Sharpness (-4 ~ +4)</label>
+              <input type="number" name="sharpness" value="${recipe?.params?.sharpness || 0}" min="-4" max="4">
             </div>
             <div class="form-group">
-                <label style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:4px; display:block;">Contrast</label>
-                <input type="number" name="contrast" value="${recipe?.params?.contrast || 0}" min="-4" max="4">
+              <label>Clarity (-4 ~ +4)</label>
+              <input type="number" name="clarity" value="${recipe?.params?.clarity || 0}" min="-4" max="4">
             </div>
+            <div class="form-group">
+              <label>Shading (-4 ~ +4)</label>
+              <input type="number" name="shading" value="${recipe?.params?.shading || 0}" min="-4" max="4">
+            </div>
+            <div class="form-group">
+              <label>Filter Effect (0 ~ 4)</label>
+              <input type="number" name="filterEffect" value="${recipe?.params?.filterEffect || 0}" min="0" max="4">
+            </div>
+            <div class="form-group">
+              <label>Grain Effect (0 ~ 3)</label>
+              <input type="number" name="grainEffect" value="${recipe?.params?.grainEffect || 0}" min="0" max="3">
+            </div>
+            <div class="form-group">
+              <label>Toning</label>
+              <select name="toning">
+                <option value="Off" ${recipe?.params?.toning === 'Off' ? 'selected' : ''}>Off</option>
+                <option value="Sepia" ${recipe?.params?.toning === 'Sepia' ? 'selected' : ''}>Sepia</option>
+                <option value="Red" ${recipe?.params?.toning === 'Red' ? 'selected' : ''}>Red</option>
+                <option value="Green" ${recipe?.params?.toning === 'Green' ? 'selected' : ''}>Green</option>
+                <option value="Blue" ${recipe?.params?.toning === 'Blue' ? 'selected' : ''}>Blue</option>
+                <option value="Purple" ${recipe?.params?.toning === 'Purple' ? 'selected' : ''}>Purple</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Correction Tab -->
+        <div class="form-tab-content hidden" data-tab="correction">
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="highlightCorrection" ${recipe?.params?.highlightCorrection ? 'checked' : ''}>
+              Highlight Correction
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label>Shadow Correction</label>
+            <select name="shadowCorrection">
+              <option value="Off" ${recipe?.params?.shadowCorrection === 'Off' ? 'selected' : ''}>Off</option>
+              <option value="Low" ${recipe?.params?.shadowCorrection === 'Low' ? 'selected' : ''}>Low</option>
+              <option value="Medium" ${recipe?.params?.shadowCorrection === 'Medium' ? 'selected' : ''}>Medium</option>
+              <option value="High" ${recipe?.params?.shadowCorrection === 'High' ? 'selected' : ''}>High</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="peripheralIlluminationCorrection" ${recipe?.params?.peripheralIlluminationCorrection ? 'checked' : ''}>
+              Peripheral Illumination Correction
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" name="highISONoiseReduction" ${recipe?.params?.highISONoiseReduction ? 'checked' : ''}>
+              High-ISO Noise Reduction
+            </label>
+          </div>
+        </div>
+        
+        <!-- Exposure Tab -->
+        <div class="form-tab-content hidden" data-tab="exposure">
+          <div class="form-group">
+            <label>White Balance</label>
+            <select name="whiteBalance">
+              <option value="Auto" ${recipe?.params?.whiteBalance === 'Auto' ? 'selected' : ''}>Auto</option>
+              <option value="Daylight" ${recipe?.params?.whiteBalance === 'Daylight' ? 'selected' : ''}>Daylight</option>
+              <option value="Shade" ${recipe?.params?.whiteBalance === 'Shade' ? 'selected' : ''}>Shade</option>
+              <option value="Cloudy" ${recipe?.params?.whiteBalance === 'Cloudy' ? 'selected' : ''}>Cloudy</option>
+              <option value="Tungsten" ${recipe?.params?.whiteBalance === 'Tungsten' ? 'selected' : ''}>Tungsten</option>
+              <option value="Fluorescent" ${recipe?.params?.whiteBalance === 'Fluorescent' ? 'selected' : ''}>Fluorescent</option>
+              <option value="Manual" ${recipe?.params?.whiteBalance === 'Manual' ? 'selected' : ''}>Manual</option>
+            </select>
+          </div>
+          
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label>WB Comp A (-7 ~ +7)</label>
+              <input type="number" name="wbCompensationA" value="${recipe?.params?.wbCompensationA || 0}" min="-7" max="7">
+            </div>
+            <div class="form-group">
+              <label>WB Comp M (-7 ~ +7)</label>
+              <input type="number" name="wbCompensationM" value="${recipe?.params?.wbCompensationM || 0}" min="-7" max="7">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>ISO Max</label>
+            <select name="isoMax">
+              <option value="100" ${recipe?.params?.isoMax === 100 ? 'selected' : ''}>100</option>
+              <option value="200" ${recipe?.params?.isoMax === 200 ? 'selected' : ''}>200</option>
+              <option value="400" ${recipe?.params?.isoMax === 400 ? 'selected' : ''}>400</option>
+              <option value="800" ${recipe?.params?.isoMax === 800 ? 'selected' : ''}>800</option>
+              <option value="1600" ${recipe?.params?.isoMax === 1600 ? 'selected' : ''}>1600</option>
+              <option value="3200" ${recipe?.params?.isoMax === 3200 ? 'selected' : ''}>3200</option>
+              <option value="6400" ${recipe?.params?.isoMax === 6400 ? 'selected' : ''}>6400</option>
+              <option value="12800" ${recipe?.params?.isoMax === 12800 ? 'selected' : ''}>12800</option>
+              <option value="25600" ${recipe?.params?.isoMax === 25600 ? 'selected' : ''}>25600</option>
+              <option value="51200" ${recipe?.params?.isoMax === 51200 ? 'selected' : ''}>51200</option>
+              <option value="102400" ${recipe?.params?.isoMax === 102400 ? 'selected' : ''}>102400</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Exposure Compensation</label>
+            <select name="exposureCompensation">
+              <option value="-2" ${recipe?.params?.exposureCompensation === '-2' ? 'selected' : ''}>-2 EV</option>
+              <option value="-5/3" ${recipe?.params?.exposureCompensation === '-5/3' ? 'selected' : ''}>-1 2/3 EV</option>
+              <option value="-4/3" ${recipe?.params?.exposureCompensation === '-4/3' ? 'selected' : ''}>-1 1/3 EV</option>
+              <option value="-1" ${recipe?.params?.exposureCompensation === '-1' ? 'selected' : ''}>-1 EV</option>
+              <option value="-2/3" ${recipe?.params?.exposureCompensation === '-2/3' ? 'selected' : ''}>-2/3 EV</option>
+              <option value="-1/3" ${recipe?.params?.exposureCompensation === '-1/3' ? 'selected' : ''}>-1/3 EV</option>
+              <option value="0" ${recipe?.params?.exposureCompensation === '0' ? 'selected' : ''}>0 EV</option>
+              <option value="+1/3" ${recipe?.params?.exposureCompensation === '+1/3' ? 'selected' : ''}selected>+1/3 EV</option>
+              <option value="+2/3" ${recipe?.params?.exposureCompensation === '+2/3' ? 'selected' : ''}>+2/3 EV</option>
+              <option value="+1" ${recipe?.params?.exposureCompensation === '+1' ? 'selected' : ''}>+1 EV</option>
+              <option value="+4/3" ${recipe?.params?.exposureCompensation === '+4/3' ? 'selected' : ''}>+1 1/3 EV</option>
+              <option value="+5/3" ${recipe?.params?.exposureCompensation === '+5/3' ? 'selected' : ''}>+1 2/3 EV</option>
+              <option value="+2" ${recipe?.params?.exposureCompensation === '+2' ? 'selected' : ''}>+2 EV</option>
+            </select>
+          </div>
         </div>
         
         <div style="display:flex; gap:10px; margin-top:20px;">
@@ -315,6 +470,29 @@ export class UIManager {
       </form>
     `;
 
+        // Tab switching logic
+        const tabs = container.querySelectorAll('.form-tab');
+        const tabContents = container.querySelectorAll('.form-tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Show corresponding content
+                tabContents.forEach(content => {
+                    if (content.dataset.tab === targetTab) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
         document.getElementById('btn-cancel').onclick = () => this.renderRecipes();
         document.getElementById('recipe-form').onsubmit = (e) => {
             e.preventDefault();
@@ -323,10 +501,31 @@ export class UIManager {
                 name: fd.get('name'),
                 baseEffect: fd.get('baseEffect'),
                 params: {
+                    // Basic
                     saturation: parseInt(fd.get('saturation')),
                     hue: parseInt(fd.get('hue')),
-                    highKey: parseInt(fd.get('highKey')),
+                    highLowKey: parseInt(fd.get('highLowKey')),
                     contrast: parseInt(fd.get('contrast')),
+                    // Advanced
+                    contrastHighlight: parseInt(fd.get('contrastHighlight')),
+                    contrastShadow: parseInt(fd.get('contrastShadow')),
+                    sharpness: parseInt(fd.get('sharpness')),
+                    clarity: parseInt(fd.get('clarity')),
+                    shading: parseInt(fd.get('shading')),
+                    filterEffect: parseInt(fd.get('filterEffect')),
+                    grainEffect: parseInt(fd.get('grainEffect')),
+                    toning: fd.get('toning'),
+                    // Correction
+                    highlightCorrection: fd.get('highlightCorrection') === 'on',
+                    shadowCorrection: fd.get('shadowCorrection'),
+                    peripheralIlluminationCorrection: fd.get('peripheralIlluminationCorrection') === 'on',
+                    highISONoiseReduction: fd.get('highISONoiseReduction') === 'on',
+                    // Exposure
+                    whiteBalance: fd.get('whiteBalance'),
+                    wbCompensationA: parseInt(fd.get('wbCompensationA')),
+                    wbCompensationM: parseInt(fd.get('wbCompensationM')),
+                    isoMax: parseInt(fd.get('isoMax')),
+                    exposureCompensation: fd.get('exposureCompensation')
                 }
             };
 
