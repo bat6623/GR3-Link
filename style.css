@@ -68,13 +68,14 @@
 
 body {
   font-family: var(--font-primary);
-  background-color: var(--color-bg-primary);
-  background: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #1a1a1a 100%);
+  background: var(--color-bg-primary);
   color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   /* Use dynamic viewport height for mobile browsers */
   height: 100vh;
   height: 100dvh;
