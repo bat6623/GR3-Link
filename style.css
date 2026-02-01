@@ -73,7 +73,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Use dynamic viewport height for mobile browsers */
   height: 100vh;
+  height: 100dvh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
 }
@@ -169,6 +172,7 @@ button {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
   max-width: 600px;
   /* Mobile First Constraint */
   margin: 0 auto;
@@ -241,6 +245,8 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--spacing-lg);
+  padding-top: env(safe-area-inset-top);
+  height: calc(60px + env(safe-area-inset-top));
   background-color: rgba(26, 26, 26, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -290,6 +296,7 @@ nav.bottom-nav {
   position: absolute;
   /* Changed context to fixed in media query or absolute in container */
   bottom: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 40px);
