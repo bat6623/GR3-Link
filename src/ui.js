@@ -57,20 +57,23 @@ export class UIManager {
 
                 console.log('Connect interacting, starting app...');
 
-                // Expose connect logic here or trigger global event
-                // For simplicity, we just trigger the animation, but we really should wait for connect
-                // However, mainly we want to see if the UI works.
+                // Trigger camera connection
+                const isConnected = await this.camera.connect();
+                this.updateConnectionStatus(isConnected);
 
-                // Let's assume main.js handles the actual connection, 
-                // but we need to trigger the visual transition.
-                // We'll delay slightly to show feedback
-
+                // Animate shutter close
                 document.body.classList.add('app-started');
+
                 setTimeout(() => {
                     const overlay = document.getElementById('startup-overlay');
                     if (overlay) overlay.style.display = 'none';
                     startBtn.classList.remove('loading');
                     startBtn.textContent = 'Connect';
+
+                    // Switch to photos view if connected
+                    if (isConnected) {
+                        this.switchTab('photos');
+                    }
                 }, 800);
             };
 

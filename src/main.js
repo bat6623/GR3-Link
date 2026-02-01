@@ -40,21 +40,10 @@ const initApp = async () => {
   // To avoid circular dependency refactoring mania, let's just let it fail gracefully on load
   // and retry on button click.
 
-  // Hack: Re-assign the start button handler in main.js to ensure logic flow
-  const startBtn = document.getElementById('btn-start-app');
-  if (startBtn) {
-    const originalHandler = startBtn.onclick; // Preserving if any (managed by UI class)
-
-    startBtn.addEventListener('pointerup', async () => {
-      console.log('Main: Connect requested');
-      const isConnected = await camera.connect(); // This will trigger the alert if fails
-      ui.updateConnectionStatus(isConnected);
-      if (isConnected) {
-        ui.switchTab('photos');
-        ui.renderPhotos(); // Ensure photos are fetched
-      }
-    });
-  }
+  // Connect logic is now handled by UI manager's click event
+  // We just need to expose camera and ui for the handler
+  window.__gr3_camera = camera;
+  window.__gr3_ui = ui;
 
   // Register Service Worker via Vite Plugin PWA
   // Note: with 'registerType: autoUpdate', the plugin injects registration code script in index.html
