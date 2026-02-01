@@ -75,6 +75,15 @@ const initApp = async () => {
   // So:
   // 1. Remove old registration code.
 
+  // Auto-check for updates on startup
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(registration => {
+      registration.update(); // Check for updates on load
+    });
+  }
+
+  // Handle PWA update prompt automatically (skipWaiting)
+  // This interacts with vite-plugin-pwa's reloadSW logic
 };
 
 initApp();

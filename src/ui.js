@@ -364,5 +364,40 @@ export class UIManager {
             this.updateConnectionStatus(success);
             this.renderSettings();
         };
+
+        // Add Reset / Force Update Button
+        const resetBtn = document.createElement('button');
+        resetBtn.className = 'btn';
+        resetBtn.style.textAlign = 'center';
+        resetBtn.style.width = '100%';
+        resetBtn.style.marginTop = '20px';
+        resetBtn.style.border = '1px solid var(--color-error)';
+        resetBtn.style.color = 'var(--color-error)';
+        resetBtn.textContent = 'Force Update & Reset App';
+
+        resetBtn.onclick = async () => {
+            if (confirm('This will clear all caches and force a reload. Continue?')) {
+                resetBtn.textContent = 'Updating...';
+
+                // 1. Unregister SW
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (const registration of registrations) {
+                        await registration.unregister();
+                    }
+                }
+
+                // 2. Clear Caches
+                if ('caches' in window) {
+                    const names = await caches.keys();
+                    await Promise.all(names.map(name => caches.delete(name)));
+                }
+
+                // 3. Force Reload with timestamp
+                window.location.href = window.location.pathname + '?v=' + new Date().getTime();
+            }
+        };
+
+        this.views.settings.querySelector('.card').appendChild(resetBtn);
     }
 }
