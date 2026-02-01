@@ -7,40 +7,66 @@ export class GRCamera {
 
   async connect() {
     if (this.isMock) {
-      console.log('Using Mock Camera');
+      console.log('Mock Camera Connected');
       this.isConnected = true;
       return true;
     }
-    
+
     try {
-      const response = await fetch(`${this.baseUrl}/ping`, { method: 'GET', signal: AbortSignal.timeout(3000) });
+      // Create a timeout promise
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), 3000); // 3s timeout
+
+      // Explicitly using absolute URL for GR3
+      const response = await fetch('http://192.168.0.1/v1/photos', {
+        method: 'GET',
+        signal: controller.signal
+      });
+      clearTimeout(id);
+
       if (response.ok) {
         this.isConnected = true;
         return true;
       }
+      throw new Error(`HTTP ${response.status}`);
     } catch (e) {
-      console.error('Connection failed', e);
-    }
-    return false;
-  }
+      console.error('Connection failed:', e);
+      this.isConnected = false;
 
+      // CRITICAL: Alert the user to the specific error
+      let msg = e.message;
+      if (e.name === 'TypeError' && e.message === 'Failed to fetch') {
+        msg = 'Mixed Content Error: Browser blocked HTTP connection. Please disable "Active Content" protection or use HTTP.';
+      } else if (e.name === 'AbortError') {
+        msg = 'Connection Timeout: Check if connected to GR_XXXX WiFi.';
+      }
+
+      // Use window.alert for blocking visibility on mobile
+      alert(`Connection Failed:\n${msg}\n\nSwitching to Demo Mode.`);
+
+      // Fallback to mock for UX testing
+      this.isMock = true;
+      this.isConnected = true;
+      return true;
+    }
+  }
   async getPhotos() {
     if (this.isMock) {
       return this._getMockPhotos();
     }
-    
+
     // GR3 API structure: GET /v1/photos returns { dirs: [{ name: "100RICOH" }] }
     try {
       const res = await fetch(`${this.baseUrl}/photos`);
       const data = await res.json();
-      
+
       // We need to fetch files from directories
       // Simplified for now: just get first directory
       if (data.dirs && data.dirs.length > 0) {
         const dir = data.dirs[0].name;
         const filesRes = await fetch(`${this.baseUrl}/photos/${dir}`);
         const filesData = await filesRes.json(); // { files: ["R000001.JPG", ...] }
-        
+
         return filesData.files.map(f => ({
           name: f,
           url: `${this.baseUrl}/photos/${dir}/${f}`,

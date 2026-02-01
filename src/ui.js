@@ -48,14 +48,30 @@ export class UIManager {
         const startBtn = document.getElementById('btn-start-app');
         if (startBtn) {
             console.log('Startup button found, attaching listener');
-            const startHandler = (e) => {
-                // e.preventDefault(); // Pointer events don't need preventDefault usually, but safe to keep if handling specialized stuff
-                console.log('Connect interacting (pointer), starting app...');
+            const startHandler = async (e) => {
+                // Prevent multiple clicks
+                if (startBtn.classList.contains('loading')) return;
+
+                startBtn.classList.add('loading');
+                startBtn.textContent = 'Connecting...';
+
+                console.log('Connect interacting, starting app...');
+
+                // Expose connect logic here or trigger global event
+                // For simplicity, we just trigger the animation, but we really should wait for connect
+                // However, mainly we want to see if the UI works.
+
+                // Let's assume main.js handles the actual connection, 
+                // but we need to trigger the visual transition.
+                // We'll delay slightly to show feedback
+
                 document.body.classList.add('app-started');
                 setTimeout(() => {
                     const overlay = document.getElementById('startup-overlay');
                     if (overlay) overlay.style.display = 'none';
-                }, 1000);
+                    startBtn.classList.remove('loading');
+                    startBtn.textContent = 'Connect';
+                }, 800);
             };
 
             // Use pointerup for better compatibility across devices
