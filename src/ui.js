@@ -132,23 +132,87 @@ export class UIManager {
   }
 
   _createRecipeCard(recipe) {
+    // 生成預覽圖的漸變背景（基於濾鏡參數）
+    const getPreviewGradient = (params) => {
+      const saturation = params.saturation || 0;
+      const contrast = params.contrast || 0;
+      const hue = params.hue || 0;
+
+      // 根據參數生成不同的漸變色
+      if (recipe.baseEffect === 'Hi-Contrast B&W' || recipe.baseEffect === 'BW Monotone') {
+        return 'linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 50%, #2a2a2a 100%)';
+      } else if (saturation > 2) {
+        return 'linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%)';
+      } else if (contrast > 2) {
+        return 'linear-gradient(135deg, #000000 0%, #ffffff 50%, #333333 100%)';
+      } else {
+        return 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)';
+      }
+    };
+
     return `
-      <div class="card recipe-card">
+      <div class="card recipe-card" style="overflow:hidden;">
+        <!-- 預覽圖區域 -->
+        <div style="
+          width: 100%;
+          height: 120px;
+          background: ${getPreviewGradient(recipe.params)};
+          margin: -24px -24px 16px -24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
+        ">
+          <div style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 10px,
+              rgba(255,255,255,0.03) 10px,
+              rgba(255,255,255,0.03) 20px
+            );
+          "></div>
+          <div style="
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 1;
+          ">${recipe.baseEffect}</div>
+        </div>
+
+        <!-- 卡片內容 -->
         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px;">
           <div>
-            <h4 style="margin:0 0 4px 0;">${recipe.name}</h4>
-            <div style="font-size:0.75rem; color:var(--color-text-muted);">${recipe.baseEffect}</div>
+            <h4 style="margin:0 0 4px 0; font-size:1.1rem;">${recipe.name}</h4>
+            <div style="font-size:0.75rem; color:var(--color-text-muted);">${recipe.note || '自訂濾鏡參數'}</div>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn-edit" data-id="${recipe.id}" style="padding:4px 12px; font-size:0.8rem;">Edit</button>
-            <button class="btn-delete" data-id="${recipe.id}" style="padding:4px 12px; font-size:0.8rem; background:var(--color-error);">Delete</button>
+            <button class="btn-edit" data-id="${recipe.id}" style="padding:6px 14px; font-size:0.8rem; background:var(--color-accent); color:#000; border-radius:20px; font-weight:600;">編輯</button>
+            <button class="btn-delete" data-id="${recipe.id}" style="padding:6px 14px; font-size:0.8rem; background:rgba(255,77,77,0.2); color:#ff4d4d; border-radius:20px; font-weight:600;">刪除</button>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; font-size:0.8rem;">
-          <div>飽和度: ${recipe.params.saturation}</div>
-          <div>色相: ${recipe.params.hue}</div>
-          <div>對比度: ${recipe.params.contrast}</div>
-          <div>銳利度: ${recipe.params.sharpness || 0}</div>
+        
+        <!-- 參數預覽 -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; font-size:0.75rem; background:rgba(255,255,255,0.03); padding:12px; border-radius:8px;">
+          <div style="text-align:center;">
+            <div style="color:var(--color-text-muted); margin-bottom:4px;">飽和度</div>
+            <div style="color:var(--color-accent); font-weight:600;">${recipe.params.saturation > 0 ? '+' : ''}${recipe.params.saturation}</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="color:var(--color-text-muted); margin-bottom:4px;">對比度</div>
+            <div style="color:var(--color-accent); font-weight:600;">${recipe.params.contrast > 0 ? '+' : ''}${recipe.params.contrast}</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="color:var(--color-text-muted); margin-bottom:4px;">銳利度</div>
+            <div style="color:var(--color-accent); font-weight:600;">${(recipe.params.sharpness || 0) > 0 ? '+' : ''}${recipe.params.sharpness || 0}</div>
+          </div>
         </div>
       </div>
     `;
