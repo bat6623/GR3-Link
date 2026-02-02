@@ -6,29 +6,42 @@ export class UIManager {
     this.store = new RecipeStore();
     this.currentView = 'recipes';
 
-    // View containers
-    this.views = {
-      recipes: document.getElementById('view-recipes'),
-      settings: document.getElementById('view-settings')
-    };
-
-    // Nav buttons
-    this.navButtons = {
-      recipes: document.getElementById('nav-recipes'),
-      settings: document.getElementById('nav-settings')
-    };
+    // View containers - 需要動態創建
+    this.views = {};
 
     this.init();
   }
 
   init() {
+    this._setupViews();
     this._setupNavigation();
     this._handleStartup();
   }
 
+  _setupViews() {
+    // 創建 view 容器
+    const mainContent = document.getElementById('main-content');
+
+    // 清空並創建 recipes 和 settings views
+    mainContent.innerHTML = `
+            <div id="view-recipes" class="view"></div>
+            <div id="view-settings" class="view hidden"></div>
+        `;
+
+    this.views = {
+      recipes: document.getElementById('view-recipes'),
+      settings: document.getElementById('view-settings')
+    };
+  }
+
   _setupNavigation() {
-    Object.entries(this.navButtons).forEach(([view, btn]) => {
-      btn.addEventListener('click', () => this.switchView(view));
+    // 使用 data-target 屬性來綁定導航
+    const navButtons = document.querySelectorAll('.nav-item');
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        this.switchView(target);
+      });
     });
   }
 
@@ -39,8 +52,14 @@ export class UIManager {
     this.views[viewName].classList.remove('hidden');
 
     // Update nav active state
-    Object.values(this.navButtons).forEach(btn => btn.classList.remove('active'));
-    this.navButtons[viewName].classList.add('active');
+    const navButtons = document.querySelectorAll('.nav-item');
+    navButtons.forEach(btn => {
+      if (btn.dataset.target === viewName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
 
     this.currentView = viewName;
 
@@ -87,7 +106,7 @@ export class UIManager {
       container.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.dataset.id;
-          const recipe = this.store.getById(id);
+          const recipe = this.store.get(id);
           this.showRecipeForm(recipe);
         });
       });
